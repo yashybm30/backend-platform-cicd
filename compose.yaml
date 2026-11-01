@@ -4,6 +4,17 @@ services:
     environment:
       initialBuckets: media
     ports: ["127.0.0.1:9000:9090"]
+  s3-init:
+    build: .
+    command: ["node", "scripts/create-bucket.mjs"]
+    environment:
+      AWS_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: local-minio
+      AWS_SECRET_ACCESS_KEY: local-minio-password
+      S3_ENDPOINT: http://s3:9090
+      S3_BUCKET: media
+    depends_on:
+      s3: {condition: service_started}
   postgres:
     image: postgres:17-alpine
     environment:
@@ -48,6 +59,8 @@ services:
       CDN_ORIGIN: http://localhost:9000/media
       JWT_SECRET: ${JWT_SECRET:?Set a random JWT_SECRET of at least 48 characters}
     depends_on:
+      s3-init:
+        condition: service_completed_successfully
       migrate:
         condition: service_completed_successfully
       redis:

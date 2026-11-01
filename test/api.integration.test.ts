@@ -44,7 +44,7 @@ test("signed uploads persist metadata and complete once without cross-user acces
     headers: { "Content-Type": "image/png", "Content-Length": "4" },
     body: Buffer.from([1, 2, 3, 4]),
   });
-  expect(uploaded.ok).toBe(true);
+  expect(uploaded.status, await uploaded.text()).toBe(200);
   await api
     .post(`/v1/media/${created.body.id}/complete`)
     .set("Authorization", `Bearer ${token(randomUUID(), otherTenant)}`)

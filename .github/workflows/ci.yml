@@ -38,6 +38,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: docker compose up --wait postgres redis s3
+      - run: node scripts/create-bucket.mjs
       - run: npm run test:integration
       - if: failure()
         run: docker compose logs --no-color

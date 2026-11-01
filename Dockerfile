@@ -6,6 +6,7 @@ RUN npm ci
 COPY tsconfig.json ./
 COPY src ./src
 COPY migrations ./migrations
+COPY scripts ./scripts
 RUN npm run build
 FROM build AS production-deps
 RUN npm prune --omit=dev --ignore-scripts
@@ -16,6 +17,7 @@ COPY --from=production-deps --chown=node:node /app/node_modules ./node_modules
 COPY --from=build --chown=node:node /app/dist ./dist
 COPY --from=build --chown=node:node /app/package*.json ./
 COPY --from=build --chown=node:node /app/migrations ./migrations
+COPY --from=build --chown=node:node /app/scripts ./scripts
 USER node
 EXPOSE 3000
 CMD ["node","dist/main.js"]
