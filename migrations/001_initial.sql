@@ -1,0 +1,2 @@
+CREATE TABLE media(id UUID PRIMARY KEY,tenant_id UUID NOT NULL,user_id UUID NOT NULL,object_key TEXT NOT NULL UNIQUE,content_type TEXT NOT NULL,expected_bytes INTEGER NOT NULL,status TEXT NOT NULL DEFAULT 'pending',created_at TIMESTAMPTZ NOT NULL DEFAULT now());
+CREATE TABLE notifications(id UUID PRIMARY KEY,tenant_id UUID NOT NULL,user_id UUID NOT NULL,media_id UUID REFERENCES media(id),message TEXT NOT NULL,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),read_at TIMESTAMPTZ);
